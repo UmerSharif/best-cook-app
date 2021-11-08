@@ -1,44 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:meals/models/meal.dart';
 import 'package:meals/widgets/meal_item.dart';
 
 import '../dummy_data.dart';
 
-class CategoryMealScreen extends StatefulWidget {
+class CategoryMealScreen extends StatelessWidget {
   static const routeName = '/category-meals';
-
-  @override
-  _CategoryMealScreenState createState() => _CategoryMealScreenState();
-}
-
-class _CategoryMealScreenState extends State<CategoryMealScreen> {
-  String title;
-  List<Meal> catergoryMeal;
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final routeArgs =
-        ModalRoute.of(context).settings.arguments as Map<String, String>;
-    title = routeArgs['title'];
-    final categoryId = routeArgs["id"];
-    catergoryMeal = DUMMY_MEALS
-        .where((meal) => meal.categories.contains(categoryId))
-        .toList();
-  }
-
-  void _removeItem(String mealId) {
-    setState(() {
-      catergoryMeal.removeWhere((element) => mealId == element.id);
-    });
-  }
+  // final String id;
+  // final String title;
+  // final Color color;
+  // const CategoryMealScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final routeArgs =
+        ModalRoute.of(context).settings.arguments as Map<String, String>;
+    final title = routeArgs['title'];
+    final categoryId = routeArgs["id"];
+    final catergoryMeal = DUMMY_MEALS
+        .where((meal) => meal.categories.contains(categoryId))
+        .toList();
     return Scaffold(
         appBar: AppBar(
           title: Text(title),
@@ -51,8 +31,7 @@ class _CategoryMealScreenState extends State<CategoryMealScreen> {
                 complexity: catergoryMeal[index].complexity,
                 duration: catergoryMeal[index].duration,
                 imageUrl: catergoryMeal[index].imageUrl,
-                title: catergoryMeal[index].title,
-                removeItem: _removeItem);
+                title: catergoryMeal[index].title);
           },
           itemCount: catergoryMeal.length,
         ));
