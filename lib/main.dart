@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:meals/dummy_data.dart';
 import 'package:meals/screen/filters_screen.dart';
 import 'package:meals/screen/meal_deatail_screen.dart';
 import 'package:meals/screen/tabs_screen.dart';
 
+import 'models/meal.dart';
 import 'screen/catergories_screen.dart';
 // import './category_meals_screen.dart';
 import 'screen/category_meals_screen.dart';
@@ -24,7 +26,30 @@ class _MyAppState extends State<MyApp> {
     'vegan': false,
     'vegetarian': false
   };
-  void _setFilters(Map<String, bool> filterData) {}
+  List<Meal> _availableMeal = DUMMY_MEALS;
+  void _setFilters(Map<String, bool> filterData) {
+    setState(() {
+      _filter = filterData;
+      print(filterData);
+      // ignore: missing_return
+      _availableMeal = DUMMY_MEALS.where((meal) {
+        if (_filter['gluten'] && !meal.isGlutenFree) {
+          return false;
+        }
+        if (_filter['lactose'] && !meal.isLactoseFree) {
+          return false;
+        }
+        if (_filter['vegan'] && !meal.isVegan) {
+          return false;
+        }
+        if (_filter['vegetarian'] && !meal.isVegetarian) {
+          return false;
+        }
+        return true;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,9 +78,11 @@ class _MyAppState extends State<MyApp> {
       home: TabsScreen(),
       // initialRoute: '/',
       routes: {
-        CategoryMealScreen.routeName: (ctx) => CategoryMealScreen(),
+        CategoryMealScreen.routeName: (ctx) =>
+            CategoryMealScreen(_availableMeal), // un named arguments
         MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
-        FiltersScreen.routeName: (ctx) => FiltersScreen(setFilters: _setFilters)
+        FiltersScreen.routeName: (ctx) => FiltersScreen(
+            saveFilters: _setFilters, currentFilters: _filter) //names arguments
       },
       onUnknownRoute: (settings) {
         return MaterialPageRoute(builder: (ctx) => CategoriesScreen());
