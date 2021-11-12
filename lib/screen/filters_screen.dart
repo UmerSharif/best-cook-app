@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:meals/widgets/maim_drawer.dart';
 
 class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({Key key}) : super(key: key);
+  final Function setFilters;
+  const FiltersScreen({this.setFilters, key}) : super(key: key);
   static const routeName = '/filters';
 
   @override
@@ -29,6 +30,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Fiters'),
+          actions: [IconButton(icon: Icon(Icons.save), onPressed: () {})],
         ),
         drawer: MainDrawer(),
         body: Column(
