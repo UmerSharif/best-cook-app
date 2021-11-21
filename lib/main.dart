@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
     'vegetarian': false
   };
   List<Meal> _availableMeal = DUMMY_MEALS;
-  List<Meal> _favouriteMeal = DUMMY_MEALS;
+  List<Meal> _favouriteMeal = [];
   void _setFilters(Map<String, bool> filterData) {
     setState(() {
       _filter = filterData;
@@ -65,6 +65,10 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  bool _isMealFavourite(String id) {
+    return _favouriteMeal.any((meal) => meal.id == id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -95,8 +99,9 @@ class _MyAppState extends State<MyApp> {
       routes: {
         CategoryMealScreen.routeName: (ctx) =>
             CategoryMealScreen(_availableMeal), // un named arguments
-        MealDetailScreen.routeName: (ctx) =>
-            MealDetailScreen(toggleFavourite: _toggleFavourite),
+        MealDetailScreen.routeName: (ctx) => MealDetailScreen(
+            toggleFavourite: _toggleFavourite,
+            isMealFavourite: _isMealFavourite),
         FiltersScreen.routeName: (ctx) => FiltersScreen(
             saveFilters: _setFilters, currentFilters: _filter) //names arguments
       },
